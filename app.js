@@ -92,7 +92,7 @@ if (!isProduction) {
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-  res.status(err.status).json({'errors': {
+  res.status(err.status || 500).json({'errors': {
     message: err.message,
     error: {}
   }});

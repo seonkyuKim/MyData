@@ -2,21 +2,18 @@ const mongoose = require("mongoose");
 
 const WarehousingSchema = new mongoose.Schema(
   {
+    timestamps: Date,
   product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
   number: Number,
-  },
-  { timestamps: true }
+  }
 );
 
-// UserSchema.methods.getProfile = function(user) {
-//   return {
-//     main_email: this.email,
-//     phoneNumber: this.phoneNumber,
-//     name: this.name,
-//     birthdate: this.birthdate,
-//     gender: this.gender,
-//     isAdmin: this.isAdmin
-//   };
-// };
+WarehousingSchema.methods.toJSON = function(user) {
+  return {
+    timestamps: this.timestamps,
+    product: this.product,
+    number: this.number
+  };
+};
 
 mongoose.model("Warehousing", WarehousingSchema);

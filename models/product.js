@@ -9,7 +9,7 @@ const ProductSchema = new mongoose.Schema({
     price: Number,  // 정가
     cost: Number,   // 매입가
     store: { type: mongoose.Schema.Types.ObjectId, ref: 'Store' },
-    stock: Number, // 재고
+    stock: { type: Number, default: 0 }, // 재고
 }, { timestamps: false });
 
 

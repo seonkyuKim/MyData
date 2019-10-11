@@ -2,8 +2,10 @@ const mongoose = require("mongoose");
 
 const BillingSchema = new mongoose.Schema(
   {
+    timestamps: Date,
+    order: { type: mongoose.Schema.Types.ObjectId, ref: 'Order' },
     numberOfCustomers: { type: Number, default: 1 },
-    finalOrderer: String,
+    finalOrderer: { type: String, default: "김민석" },
     numberOfProducts: { type: Number, default: 1 },
     serviceCharge: { type: Number, default: 0 },
     cashAmount: Number,
@@ -26,19 +28,17 @@ const BillingSchema = new mongoose.Schema(
     mobile: { type: Number, default: 0 },
     tmoneyCashbee: { type: Number, default: 0 },
     okCashback: { type: Number, default: 0 }
-  },
-  { timestamps: true }
+  }
 );
 
-// UserSchema.methods.getProfile = function(user) {
-//   return {
-//     main_email: this.email,
-//     phoneNumber: this.phoneNumber,
-//     name: this.name,
-//     birthdate: this.birthdate,
-//     gender: this.gender,
-//     isAdmin: this.isAdmin
-//   };
-// };
+BillingSchema.methods.toJSON = function(user) {
+  return {
+    timestamps: this.timestamps,
+    order: this.order,
+    cashAmount: this.cashAmount,
+    cardAmount: this.cardAmount,
+    cardCompany: this.cardCompany
+  };
+};
 
 mongoose.model("Billing", BillingSchema);

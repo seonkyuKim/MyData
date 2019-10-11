@@ -21,4 +21,13 @@ StoreSchema.methods.getRepresentative = function (store) {
     return this.representative;
 };
 
+StoreSchema.methods.toJSON = function (store) {
+    return {
+        id: this.id,
+        name: this.name,
+        representative: this.representative,
+    }
+};
+
+
 mongoose.model('Store', StoreSchema);
