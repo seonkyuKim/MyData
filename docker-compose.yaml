@@ -7,5 +7,5 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - 9229:9229
+      - 9228:9228
     command: yarn start
