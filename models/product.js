@@ -10,18 +10,21 @@ const ProductSchema = new mongoose.Schema({
     cost: Number,   // 매입가
     store: { type: mongoose.Schema.Types.ObjectId, ref: 'Store' },
     stock: Number, // 재고
-}, { timestamps: true });
+}, { timestamps: false });
 
 
 
-UserSchema.methods.getProfile = function (user) {
+ProductSchema.methods.toJSON = function (user) {
     return {
-        main_email: this.email,
-        phoneNumber: this.phoneNumber,
+        code: this.code,
         name: this.name,
-        birthdate: this.birthdate,
-        gender: this.gender,
-        isAdmin: this.isAdmin,
+        bigCategory: this.bigCategory,
+        middleCategory: this.middleCategory,
+        smallCategory: this.smallCategory,
+        price: this.price,
+        cost: this.cost,
+        store: this.store,
+        stock: this.stock,
     };
 };
 

@@ -13,19 +13,12 @@ const StoreSchema = new mongoose.Schema({
     phoneNumber: String,    // 연락처
     Address: String,        // 주소
     email: String           // 이메일
-}, { timestamps: true });
+}, { timestamps: false });
 
 
 
-UserSchema.methods.getProfile = function (user) {
-    return {
-        main_email: this.email,
-        phoneNumber: this.phoneNumber,
-        name: this.name,
-        birthdate: this.birthdate,
-        gender: this.gender,
-        isAdmin: this.isAdmin,
-    };
+StoreSchema.methods.getRepresentative = function (store) {
+    return this.representative;
 };
 
 mongoose.model('Store', UserSchema);
