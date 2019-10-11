@@ -1,12 +1,13 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
-const ObjectId = mongoose.Schema.Types.ObjectId;
+const db = mongoose.connection;
 
 const Order = mongoose.model("Order");
 const Product = mongoose.model("Product");
 const Store = mongoose.model("Store");
 const Billing = mongoose.model("Billing");
 const Warehousing = mongoose.model("Warehousing");
+const StoredNReleased = mongoose.model("StoredNReleased");
 
 router.post("/stores", function(req, res, next) {
   let store = new Store();
@@ -72,6 +73,10 @@ router.post("/orders", function(req, res, next) {
     order
       .save()
       .then(() => {
+        const storedNReleased = new StoredNReleased();
+        storedNReleased.order = order;
+        storedNReleased.product = product;
+        storedNReleased.save();
         return res.json(order.toJSON());
       })
       .catch(next);
@@ -103,30 +108,151 @@ router.post("/warehousing", function(req, res, next) {
 
     product.save();
     warehousing.save().then(() => {
+      const storedNReleased = new StoredNReleased();
+      storedNReleased.warehousing = warehousing;
+      storedNReleased.product = product;
+      storedNReleased.save();
       return res.json(warehousing.toJSON());
     });
   });
 });
 
+// 세부매출내역현황
 router.get("/salesDetail", function(req, res, next) {
-  Order.find({}, (err, order) => {
-
-    for(let i=0; i<order.length; i++) {
-      let cashAmount = 0;
-      let cardAmount = 0;
-      Billing.findOne({order: order[i].id}, (err, billing) => {
-        if(billing) {
-          cashAmount = billing.cashAmount;
-          cardAmount = billing.cardAmount;
+  db.collection("orders")
+    .aggregate([
+      {
+        $lookup: {
+          from: "billings",
+          localField: "_id",
+          foreignField: "order",
+          as: "billing"
         }
-      })
-      
-      order[i].cashAmount = cashAmount;
-      order[i].cardAmount = cardAmount;
-      
-    }
-    return res.json(order);
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "product",
+          foreignField: "_id",
+          as: "product"
+        }
+      },
+      {
+        $project: {
+          timestamps: 1,
+          orderType: 1,
+          "product.code": 1,
+          "product.name": 1,
+          number: 1,
+          discount: 1,
+          totalSales: 1,
+          VAT: 1,
+          netSales: 1,
+          customer: 1,
+          "billing.cashAmount": 1,
+          "billing.cardAmount": 1
+        }
+      }
+    ])
+    .toArray()
+    .then(function(data) {
+      return res.json(data);
+    });
+});
+
+// 영수증별 매출 현황
+router.get("/receipts", function(req, res, next) {
+  Billing.find({}, (err, billings) => {
+    return res.json(billings);
   });
 });
+
+// 상품별 매출현황
+router.get("/productSales", function(req, res, next) {
+  db.collection("orders")
+    .aggregate([
+      {
+        $lookup: {
+          from: "products",
+          localField: "product",
+          foreignField: "_id",
+          as: "product"
+        }
+      },
+      {
+        $project: {
+          timestamps: 1,
+          orderType: 1,
+          "product.bigCategory": 1,
+          "product.middleCategory": 1,
+          "product.smallCategory": 1,
+          "product.code": 1,
+          "product.name": 1,
+          "product.price": 1,
+          number: 1,
+          discount: 1,
+          totalSales: 1,
+          VAT: 1,
+          netSales: 1,
+          customer: 1
+        }
+      }
+    ])
+    .toArray()
+    .then(function(data) {
+      return res.json(data);
+    });
+});
+
+// 상품별 입출고현황
+router.get('/storedNReleased', function(req, res, next) {
+  db.collection("storednreleaseds")
+    .aggregate([
+      {
+        $lookup: {
+          from: "products",
+          localField: "product",
+          foreignField: "_id",
+          as: "product"
+        }
+      },
+      {
+        $lookup: {
+          from: "orders",
+          localField: "order",
+          foreignField: "_id",
+          as: "order"
+        }
+      },
+      {
+        $lookup: {
+          from: "warehousings",
+          localField: "warehousing",
+          foreignField: "_id",
+          as: "warehousing"
+        }
+      },
+      {
+        $project: {
+          
+          "product.code": 1,
+          "product.name": 1,
+          "product.bigCategory": 1,
+          "product.middleCategory": 1,
+          "product.smallCategory": 1,
+          "product.price": 1,
+          "product.cost": 1,
+          "order.number": 1,
+          "order.timestamps": 1,
+          "warehousing.number": 1,
+          "warehousing.timestamps": 1,
+        }
+      }
+    ])
+    .toArray()
+    .then(function(data) {
+      return res.json(data);
+    });
+})
 
 module.exports = router;

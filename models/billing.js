@@ -35,9 +35,28 @@ BillingSchema.methods.toJSON = function(user) {
   return {
     timestamps: this.timestamps,
     order: this.order,
+    numberOfCustomers: this.numberOfCustomers,
+    serviceCharge: this.serviceCharge,
+    
     cashAmount: this.cashAmount,
+    cashAuthorizationAmount: this.cashAuthorizationAmount,
+    cashNumber: this.cashNumber,
+
     cardAmount: this.cardAmount,
-    cardCompany: this.cardCompany
+    cardCompany: this.cardCompany,
+    cardNumber: this.cardNumber,
+
+    giftCard: this.giftCard,
+    point: this.point,
+    downPayment: this.downPayment,
+    prepaidCard: this.prepaidCard,
+    couponNumber: this.couponNumber,
+    couponAmount: this.couponAmount,
+    environmentCharge: this.environmentCharge,
+    associatedCard: this.associatedCard,
+    mobile: this.mobile,
+    tmoneyCashbee: this.tmoneyCashbee,
+    okCashback: this.okCashback
   };
 };
 

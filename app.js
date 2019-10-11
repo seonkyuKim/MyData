@@ -64,6 +64,7 @@ require("./models/order");
 require("./models/product");
 require("./models/store");
 require("./models/warehousing");
+require("./models/storedNReleased");
 
 
 app.use("/api", require("./routes"));
