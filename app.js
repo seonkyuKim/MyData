@@ -11,7 +11,6 @@ const http = require("http"),
   errorhandler = require("errorhandler"),
   mongoose = require("mongoose");
 
-const { InternalError } = require("./errors");
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -37,7 +36,7 @@ if (!isProduction) {
 
 // Database Setting
 
-const dev_url = "localhost:27017/myData";
+const dev_url = "mongodb://localhost:27017/myData";
 const options = {
   useUnifiedTopology: true,
   useNewUrlParser: true
@@ -60,10 +59,10 @@ if (isProduction) {
   mongoose.set("debug", true);
 }
 
-require("./models/user");
+// require("./models/user");
 // require('./models/Article');
 // require('./models/Comment');
-require("./config/passport");
+// require("./config/passport");
 
 app.use("/api", require("./routes"));
 
