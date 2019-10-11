@@ -20,15 +20,15 @@ const OrderSchema = new mongoose.Schema({
 
 
 
-UserSchema.methods.getProfile = function (user) {
-    return {
-        main_email: this.email,
-        phoneNumber: this.phoneNumber,
-        name: this.name,
-        birthdate: this.birthdate,
-        gender: this.gender,
-        isAdmin: this.isAdmin,
-    };
-};
+// UserSchema.methods.getProfile = function (user) {
+//     return {
+//         main_email: this.email,
+//         phoneNumber: this.phoneNumber,
+//         name: this.name,
+//         birthdate: this.birthdate,
+//         gender: this.gender,
+//         isAdmin: this.isAdmin,
+//     };
+// };
 
-mongoose.model('Order', UserSchema);
+mongoose.model('Order', OrderSchema);

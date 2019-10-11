@@ -28,4 +28,4 @@ ProductSchema.methods.toJSON = function (user) {
     };
 };
 
-mongoose.model('Product', UserSchema);
+mongoose.model('Product', ProductSchema);

@@ -59,10 +59,12 @@ if (isProduction) {
   mongoose.set("debug", true);
 }
 
-// require("./models/user");
-// require('./models/Article');
-// require('./models/Comment');
-// require("./config/passport");
+require("./models/billing");
+require("./models/order");
+require("./models/product");
+require("./models/store");
+require("./models/warehousing");
+
 
 app.use("/api", require("./routes"));
 

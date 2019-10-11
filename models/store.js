@@ -21,4 +21,4 @@ StoreSchema.methods.getRepresentative = function (store) {
     return this.representative;
 };
 
-mongoose.model('Store', UserSchema);
+mongoose.model('Store', StoreSchema);
