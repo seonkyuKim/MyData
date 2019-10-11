@@ -36,7 +36,7 @@ if (!isProduction) {
 
 // Database Setting
 
-const dev_url = "mongodb://15.164.252.54:27017/myData";
+const dev_url = "mongodb://localhost:27017/myData";
 const options = {
   useUnifiedTopology: true,
   useNewUrlParser: true
